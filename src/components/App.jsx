@@ -9,7 +9,8 @@ export class App extends Component {
     // pictures: null,
     isLoading: false,
     error: null,
-    searchParams: ''
+    searchParams: '',
+    page: 1
   }
   handleSearchSubmit = search => {
    
@@ -36,8 +37,6 @@ export class App extends Component {
       style={{
         height: '100vh',
         display: 'block',
-        justifyContent: 'center',
-        alignItems: 'center',
         fontSize: 40,
         color: '#010101'
       }}
