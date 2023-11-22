@@ -33,25 +33,15 @@ export class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.query !== this.state.query || prevState.page !== this.state.page) {
-      // const API = '?key=39342845-b067dc268014f57340e74d554&q='
-      // const BASEURL = 'https://pixabay.com/api/'
-      // let PAGE = this.state.page
 
 
       this.setState({ isLoading: true, });
-      // fetch(`${BASEURL}${API}${this.state.query}&page=${PAGE}`)
-      //   .then(res => {
-      //     if (res.ok) {
-      //       return res.json()
-      //     }
-      //     return Promise.reject(new Error('not found'))
-      //   }
-      //   )
+     
       getPhotos(this.state)
-        .then( pictures => this.setState(({pictures: [...pictures.hits]}) ))
+        .then( pictures => this.setState(({pictures: [...this.state.pictures,...pictures.hits]}) ))
         .catch(error => this.setState({ error }))
         .finally(() => this.setState({ isLoading: false }))
-      console.log(this.state.pictures)
+    
     }
         
 
