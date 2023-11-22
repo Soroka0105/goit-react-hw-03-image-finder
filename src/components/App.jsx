@@ -4,6 +4,7 @@ import { ImageGallery } from "./ImageGallery";
 import { Loader } from "components/Loader"
 import { LoadMoreButton } from "components/Button"
 import { getPhotos } from './../api/photos';
+import { Modal } from "./Modal";
 
 export class App extends Component {
 
@@ -12,8 +13,12 @@ export class App extends Component {
     isLoading: false,
     error: null,
     query: '',
-    page: 1
+    page: 1,
+    total: 0,
+    isShowModal: false,
+    largeImg: ""
   }
+  
   handleSearchSubmit = search => {
    
     this.setState({ query: search })
@@ -30,7 +35,21 @@ export class App extends Component {
             
         )
     }
+handleOpen = (evt) => {
+  this.setState({
+      largeImg:evt.target.alt,
+      isShowModal: true,
+      
+    })
+  console.log(evt.target)
+  }
+  handleClose = () => {
+		this.setState({
+			isShowModal: false,
+		})
+	}
 
+  
   componentDidUpdate(prevProps, prevState) {
     if (prevState.query !== this.state.query || prevState.page !== this.state.page) {
 
@@ -38,18 +57,18 @@ export class App extends Component {
       this.setState({ isLoading: true, });
      
       getPhotos(this.state)
-        .then( pictures => this.setState(({pictures: [...this.state.pictures,...pictures.hits]}) ))
+        .then(pictures => this.setState(({ pictures: [...this.state.pictures, ...pictures.hits], total: pictures.total })
+        ))
         .catch(error => this.setState({ error }))
         .finally(() => this.setState({ isLoading: false }))
-    
     }
-        
+    console.log(this.state)
 
   }
-
+ 
 
   render() {
-    const { isLoading, pictures, error, query } = this.state;
+    const { isLoading, pictures, error, query, total, isShowModal, largeImg } = this.state;
     return (
       <div
         style={{
@@ -63,8 +82,9 @@ export class App extends Component {
          {error && <h1>{error.message}</h1>}
         {!query && <div>Please fill out the search form</div>}
         {isLoading && <Loader />}
-         {pictures && <ImageGallery array={pictures} />} 
-        <LoadMoreButton onClick={this.handleClick} />
+         {pictures && <ImageGallery array={pictures} onClick={this.handleOpen} />} 
+        {total > pictures.length && <LoadMoreButton onClick={this.handleClick} />}
+        {isShowModal && <Modal children={largeImg} close={ this.handleClose} />}
       </div>)
   }
 }
