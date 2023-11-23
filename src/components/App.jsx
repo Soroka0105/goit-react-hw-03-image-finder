@@ -20,8 +20,16 @@ export class App extends Component {
   }
   
   handleSearchSubmit = search => {
+    this.setState({
+      query: search,
+      pictures: [],
+    isLoading: false,
+    error: null,
+    page: 1,
+    total: 0,
+    isShowModal: false,
+    largeImg: ""  })
    
-    this.setState({ query: search })
   }
      handleClick = () => {
        
